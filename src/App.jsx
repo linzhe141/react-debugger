@@ -8,8 +8,10 @@ function App() {
   window.__setNum = setNum
   return (
     <div>
-      <span>{count}</span>
-      <span>{num}</span>
+      <span>
+        {count}
+        {num}
+      </span>
     </div>
   )
 }
