@@ -1,5 +1,4 @@
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useState, memo, useEffect } from 'react'
 
 function App() {
   debugger
@@ -9,6 +8,7 @@ function App() {
   window.__setCount = setCount
   window.__num = num
   window.__setNum = setNum
+  debugger
   useEffect(() => {
     debugger
     console.log('useEffect')
@@ -19,8 +19,23 @@ function App() {
         {count}
         {num}
       </span>
+      {/* <MemoComp></MemoComp> */}
+      <Comp num={num}></Comp>
     </div>
   )
 }
+
+function Comp(props) {
+  debugger
+  useEffect(() => {
+    debugger
+  }, [props.num])
+  return <p>Comp{props.num}</p>
+}
+debugger
+const MemoComp = memo(function PureComp() {
+  debugger
+  return 'PureComp~'
+})
 
 export default App
