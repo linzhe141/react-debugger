@@ -1,30 +1,40 @@
 import { useState, useEffect } from 'react'
 
 function App() {
+  debugger
   const [num, setNum] = useState(100)
+  window.__num = num
   window.__setNum = setNum
-  return <Comp num={num}></Comp>
+  debugger
+  useEffect(() => {
+    debugger
+    console.log('useEffect')
+  })
+  return (
+    <div>
+      <span>{num}</span>
+      <Comp num={num}></Comp>
+      <Comp zz={123}></Comp>
+    </div>
+  )
 }
 
 function Comp(props) {
   debugger
   useEffect(() => {
     debugger
-    props // {num:1000}
+    props
     return () => {
       debugger
-      // 为什么这里是旧的 props? {num:100}  从chrome的调试工具看，就是来源闭包
-      props 
+      // 这里时旧的props?
+      props
     }
   }, [props.num])
   return (
     <p>
       <span>{props.num}</span>
+      <span>{props.zz}</span>
     </p>
   )
 }
-
-setTimeout(() => {
-  __setNum(1000)
-}, 1000)
 export default App
