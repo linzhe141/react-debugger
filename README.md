@@ -75,3 +75,6 @@ updateReducer 遍历环形链表，得到最新的state到hook.memoizedState，�
 ### TODO
 
 - fiber.updateQueue ? 什么用？
+
+- delete the effect list.
+  https://github.com/facebook/react/pull/20622

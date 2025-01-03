@@ -1,11 +1,8 @@
-import { useState, memo, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 function App() {
   debugger
-  const [count, setCount] = useState(0)
   const [num, setNum] = useState(100)
-  window.__count = count
-  window.__setCount = setCount
   window.__num = num
   window.__setNum = setNum
   debugger
@@ -15,12 +12,9 @@ function App() {
   })
   return (
     <div>
-      <span>
-        {count}
-        {num}
-      </span>
-      {/* <MemoComp></MemoComp> */}
+      <span>{num}</span>
       <Comp num={num}></Comp>
+      <Comp zz={123}></Comp>
     </div>
   )
 }
@@ -29,13 +23,18 @@ function Comp(props) {
   debugger
   useEffect(() => {
     debugger
+    props
+    return () => {
+      debugger
+      // 这里时旧的props?
+      props
+    }
   }, [props.num])
-  return <p>Comp{props.num}</p>
+  return (
+    <p>
+      <span>{props.num}</span>
+      <span>{props.zz}</span>
+    </p>
+  )
 }
-debugger
-const MemoComp = memo(function PureComp() {
-  debugger
-  return 'PureComp~'
-})
-
 export default App
