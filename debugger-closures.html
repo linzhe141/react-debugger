@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      let callbackFn
+      const channel = new MessageChannel()
+      const port = channel.port2
+      channel.port1.onmessage = function performanceTask() {
+        debugger
+        // callback()
+        callbackFn()
+      }
+      function scheduleTask() {
+        port.postMessage(null)
+      }
+      function foo(callback) {
+        callbackFn = callback
+        // scheduleTask()
+        console.log('foo')
+      }
+      setTimeout(() => {
+        scheduleTask()
+      }, 1000)
+      function app() {
+        const x = 1
+        foo(function bar() {
+          debugger
+          console.log(bar)
+          console.log(x)
+        })
+        console.log('111')
+      }
+      app()
+      console.log('222')
+    </script>
+  </body>
+</html>
