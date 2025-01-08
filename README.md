@@ -1,5 +1,7 @@
 # react-debugger
 
+[![源码大致流程](./readme.svg)](./readme.svg)
+
 ## 修改 node_modules/react-dom/cjs/react-dom.development.js 代码
 
 ```js
