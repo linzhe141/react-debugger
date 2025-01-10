@@ -1,8 +1,10 @@
 # react-debugger
 
-[![源码大致流程](./readme.svg)](./readme.svg)
+[源码大致流程](./readme.svg)
 
-## 修改 node_modules/react-dom/cjs/react-dom.development.js 代码
+## 一些调试相关的修改
+
+### 修改 node_modules/react-dom/cjs/react-dom.development.js 代码
 
 ```js
 function createWorkInProgress(current, pendingProps) {
@@ -24,7 +26,7 @@ function createWorkInProgress(current, pendingProps) {
 
 ```
 
-## 修改 node_modules/@vitejs/plugin-react/dist/index.mjs 代码
+### 修改 node_modules/@vitejs/plugin-react/dist/index.mjs 代码
 
 将`skipFastRefresh`相关代码改成true，最新版本的`@vitejs/plugin-react`没有fastRefresh的配置开关了，调试react流程时，不需要这个(hmr)配置，降低debuger复杂度
 
@@ -73,6 +75,44 @@ updateState[useState(0)]->updateWorkInProgressHook
 从currentFiber[App Fiber]copy 一份 `新的hook`链表，hook对象是新的，但是hook的queue还是同一个，上面可以知道queue.pending 就是指向`__setCount(__count + 3)`的环形链表
 
 updateReducer 遍历环形链表，得到最新的state到hook.memoizedState，并且pending变成null表示完成了，暂时不考虑优先级不同导致可中断情况
+
+### 关于lane比较重要的断点
+
+- `markUpdateLaneFromFiberToRoot`
+
+  ```js
+  function markUpdateLaneFromFiberToRoot(sourceFiber, lane) {
+    debugger
+    // Update the source fiber's lanes
+    sourceFiber.lanes = mergeLanes(sourceFiber.lanes, lane)
+    ....
+  }
+  ```
+
+- `markRootUpdated`
+  ```js
+  function markRootUpdated(root, updateLane, eventTime) {
+    debugger
+    root.pendingLanes |= updateLane
+    ....
+  }
+  ```
+- `prepareFreshStack`
+  ```js
+  debugger
+  workInProgressRootRenderLanes =
+    subtreeRenderLanes =
+    workInProgressRootIncludedLanes =
+      lanes
+  ```
+- `beginWork` 最重要
+  ```js
+  debugger
+  var hasScheduledUpdateOrContext = checkScheduledUpdateOrContext(
+    current,
+    renderLanes,
+  )
+  ```
 
 ### TODO
 
