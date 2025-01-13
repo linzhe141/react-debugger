@@ -32,7 +32,7 @@ function createWorkInProgress(current, pendingProps) {
 
 ## https://www.xiabingbao.com/post/react/react-process-update-queue-riewir.html
 
-## [setState 从react18起都是异步调度了](https://github.com/reactwg/react-18/discussions/21)
+## [setState 从react18起都是批处理调度了](https://github.com/reactwg/react-18/discussions/21)
 
 What if I don’t want to batch?
 
