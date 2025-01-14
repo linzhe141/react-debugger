@@ -30,6 +30,40 @@ function createWorkInProgress(current, pendingProps) {
 
 将`skipFastRefresh`相关代码改成true，最新版本的`@vitejs/plugin-react`没有fastRefresh的配置开关了，调试react流程时，不需要这个(hmr)配置，降低debuger复杂度
 
+## complete
+
+- `HostComponent`
+
+  ```js
+  var instance = createInstance(
+    type,
+    newProps,
+    rootContainerInstance,
+    currentHostContext,
+    workInProgress,
+  )
+  appendAllChildren(instance, workInProgress, false, false)
+  workInProgress.stateNode = instance
+  bubbleProperties(workInProgress)
+  return null
+  ```
+
+- `FunctionComponent、MemoComponent、Fragment`
+
+  ```js
+  bubbleProperties(workInProgress)
+  return null
+  ```
+
+- `HostRoot`
+
+  ```js
+  var fiberRoot = workInProgress.stateNode
+  updateHostContainer(current, workInProgress)
+  bubbleProperties(workInProgress)
+  return null
+  ```
+
 ## https://www.xiabingbao.com/post/react/react-process-update-queue-riewir.html
 
 ## [setState 从react18起都是批处理调度了](https://github.com/reactwg/react-18/discussions/21)
