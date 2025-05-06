@@ -100,6 +100,8 @@ __setNum(__num + 2)
 __setNum(__num + 3)
 ```
 
+`setState`后，会给当前的fiber的lanes打算标签，比如`sync`，然后再beginwork中找到这个打算标签的fiber，然后重新执行函数组件
+
 `enqueueConcurrentHookUpdate`函数会将对应hook的`update`构造一个环形链表，并且对应的queue的interleaved指向最后一个更新，既`__setCount(__count + 3)`或者`__setNum(__num + 3)`
 
 构造完成之后就会调度更新`performConcurrentWorkOnRoot`，并且`finishQueueingConcurrentUpdates`函数中，将queue的pending指向interleaved的update链表（源码的注释写的很清楚）
@@ -139,13 +141,31 @@ updateReducer 遍历环形链表，得到最新的state到hook.memoizedState，�
     workInProgressRootIncludedLanes =
       lanes
   ```
-- `beginWork` 最重要
+- `beginWork` 组件更新 最重要
   ```js
   debugger
-  var hasScheduledUpdateOrContext = checkScheduledUpdateOrContext(
-    current,
-    renderLanes,
-  )
+  // 默认情况下，当一个组件重新执行时，其子组件也会重新执行，
+  // 所以子组件jsx由于会重新执行那么他的props怎么都是一个新的对象，
+  // 即使是memo包裹这个组件，那么他的jsx props 也是新的对象，只是因为他的浅比较，有机会跳过更新而已
+
+  // 如果父组件没有重新执行，那么在beginwork中，会直接`cloneChildFibers，好像在就进行一clone`其子fiber，所以oldProps === newProps
+  // 所以子组件会在 `oldProps !== newProps || hasContextChanged()`，或者当前的函数组件fiber包含了正在调度的renderLanes时，就进行重新执行更新
+  // 组件进行了更新
+  if (
+    oldProps !== newProps ||
+    hasContextChanged() || // Force a re-render if the implementation changed due to hot reload:
+    workInProgress.type !== current.type
+  ) {
+    // If props or context changed, mark the fiber as having performed work.
+    // This may be unset if the props are determined to be equal later (memo).
+    didReceiveUpdate = true
+  } else {
+    // 如果当前的fiber 包含了 renderLanes 表示需要更新
+    var hasScheduledUpdateOrContext = checkScheduledUpdateOrContext(
+      current,
+      renderLanes,
+    )
+  }
   ```
 
 ### TODO

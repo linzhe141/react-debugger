@@ -1,7 +1,7 @@
 import { useState, memo, useEffect } from 'react'
 
-function App() {
-  console.log('app')
+function Wrapper() {
+  console.error('Wrapper')
   const [input, setInput] = useState('')
   return (
     <div>
@@ -16,10 +16,15 @@ function App() {
   )
 }
 
+function App() {
+  console.error('app')
+  return <Wrapper />
+}
+
 function PureComp() {
-  console.log('PureComp')
+  console.error('PureComp')
   useEffect(() => {
-    console.log('PureComp useEffect')
+    console.error('PureComp useEffect')
   })
   return <div>PureComp~</div>
 }
